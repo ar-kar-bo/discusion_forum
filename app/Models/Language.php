@@ -11,4 +11,9 @@ class Language extends Model
 
     protected $fillable = ['slug','name'];
 
+    public function article()
+    {
+        return $this->belongsToMany(Article::class,'article_languages');
+    }
+
 }

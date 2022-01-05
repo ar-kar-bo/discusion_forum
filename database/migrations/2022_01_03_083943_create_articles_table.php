@@ -20,8 +20,8 @@ class CreateArticlesTable extends Migration
             $table->string('slug');
             $table->string('title');
             $table->string('image');
-            $table->text('desctiption');
-
+            $table->text('description');
+            
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();

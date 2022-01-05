@@ -13,7 +13,7 @@
     <link rel="stylesheet"
         href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
         integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{asset('style.css')}}">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <title>MM-Coder</title>
     <style>
@@ -33,7 +33,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{url('/')}}">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Articles</a>
@@ -57,15 +57,15 @@
                 </li>
                 @auth
                 <li class="nav-item ml-5">
-                    <a class="nav-link btn btn-sm  btn-warning" href="#">
+                    <a class="nav-link btn btn-sm  btn-warning" href="{{url('/create-article')}}">
                         <i class="fas fa-plus"></i>
                         Create Article</a>
                 </li>
                 @endauth
 
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="form-inline my-2 my-lg-0" action="{{'/'}}" method="get">
+                <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
@@ -100,18 +100,14 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Cras justo odio
-                                <span class="badge badge-primary badge-pill">14</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Dapibus ac facilisis in
-                                <span class="badge badge-primary badge-pill">2</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Morbi leo risus
-                                <span class="badge badge-primary badge-pill">1</span>
-                            </li>
+                            @foreach ($category as $c)
+                            <a href="{{url('/category/'.$c->slug)}}">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{$c->name}}
+                                    <span class="badge badge-primary badge-pill">{{$c->article_count}}</span>
+                                </li>
+                            </a>
+                            @endforeach
                         </ul>
                     </div>
 
@@ -125,18 +121,14 @@
 
                     <div class="card-body">
                         <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Cras justo odio
-                                <span class="badge badge-primary badge-pill">14</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Dapibus ac facilisis in
-                                <span class="badge badge-primary badge-pill">2</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Morbi leo risus
-                                <span class="badge badge-primary badge-pill">1</span>
-                            </li>
+                            @foreach ($language as $l)
+                            <a href="{{url('/language/'.$l->slug)}}">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{$l->name}}
+                                    <span class="badge badge-primary badge-pill">{{$l->article_count}}</span>
+                                </li>
+                            </a>
+                            @endforeach
                         </ul>
                     </div>
 
