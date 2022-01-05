@@ -31,16 +31,16 @@ class PageController extends Controller
         return view('index',compact('article'));
     }
 
-    // public function byLanguage(Request $request,$slug)
-    // {
-    //     $language_id = Language::where('slug',$slug)->first()->id;
-    //     $article = Article::withCount('like','comment')
-    //     ->whereHas("language",function($q) use ($language_id){
-    //         $q->where('language_id',$language_id);
-    //     })->latest()->paginate(6);
-    //     $article->appends($request->all());
-    //     return view('index',compact('article'));
-    // }
+    public function byLanguage(Request $request,$slug)
+    {
+        $language_id = Language::where('slug',$slug)->first()->id;
+        $article = Article::withCount('like','comment')
+        ->whereHas("language",function($q) use ($language_id){
+            $q->where('language_id',$language_id);
+        })->latest()->paginate(6);
+        $article->appends($request->all());
+        return view('index',compact('article'));
+    }
 
     public function createArticle()
     {
