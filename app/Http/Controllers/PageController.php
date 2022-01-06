@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleLike;
 use App\Models\Category;
 use App\Models\Language;
 use Illuminate\Http\Request;
@@ -42,6 +43,23 @@ class PageController extends Controller
         return view('index',compact('article'));
     }
 
+    public function byLiked()
+    {
+        $user_id = Auth::user()->id;
+
+        $article = Article::whereHas("like",function($q) use ($user_id){
+            $q->where('user_id',$user_id);
+        })->latest()->paginate(6);
+        $article->appends(request()->all());
+        return view('index',compact('article'));
+    }
+
+    public function detail($slug)
+    {
+        $article = Article::where('slug',$slug)->withCount('like','comment')->with('category','language','comment.user')->first();
+        return view('detail',compact('article'));
+    }
+
     public function createArticle()
     {
         $category = Category::all();
@@ -76,4 +94,24 @@ class PageController extends Controller
 
         return redirect()->back()->with('success','Article Created Success!');
     }
+
+    public function like($id)
+    {
+        $user_id = Auth::user()->id;
+        $article_id = $id;
+        $likeExist = ArticleLike::where('user_id',$user_id)->where('article_id',$article_id)->first();
+        if($likeExist){
+            ArticleLike::where('user_id',$user_id)->where('article_id',$article_id)->delete();
+            $status = 'unlike';
+        }else{
+            ArticleLike::create([
+                'user_id'=>$user_id,
+                'article_id'=>$article_id
+            ]);
+            $status = 'like';
+        }
+        $like_count = ArticleLike::where('article_id',$article_id)->count();
+        return response()->json(['like_count'=>$like_count,'status'=>$status]);
+    }
+
 }

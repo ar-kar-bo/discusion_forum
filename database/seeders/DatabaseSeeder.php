@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'name'=>'User One',
             'email'=>'userone@gmail.com',
             'password'=>Hash::make('password'),
-            'image'=>'image/user.png'
+            'image'=>'image/user.jpg'
         ]);
         Language::create([
             'slug'=>'javascript',

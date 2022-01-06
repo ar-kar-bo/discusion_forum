@@ -16,6 +16,11 @@ class Article extends Model
         return $this->belongsToMany(Language::class,'article_languages');
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     public function like()
     {
         return $this->hasMany(ArticleLike::class);
