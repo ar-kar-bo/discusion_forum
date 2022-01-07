@@ -19,8 +19,7 @@ Route::get('/create-article','PageController@createArticle');
 Route::post('/create-article','PageController@postArticle')->name('create-article');
 
 Route::get('/article/like/{id}','PageController@like');
+Route::post('/comment/create','PageController@createComment');
 Route::get('/articleliked','PageController@byLiked');
 
-Route::get('/test/{id}',function($id){
-    return ArticleLike::where('user_id',Auth::user()->id)->where('article_id',$id)->first();
-});
+

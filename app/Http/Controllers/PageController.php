@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleComment;
 use App\Models\ArticleLike;
 use App\Models\Category;
 use App\Models\Language;
@@ -56,7 +57,7 @@ class PageController extends Controller
 
     public function detail($slug)
     {
-        $article = Article::where('slug',$slug)->withCount('like','comment')->with('category','language','comment.user')->first();
+        $article = Article::where('slug',$slug)->withCount('like','comment')->with('category','language','comment.user')->latest()->first();
         return view('detail',compact('article'));
     }
 
@@ -112,6 +113,40 @@ class PageController extends Controller
         }
         $like_count = ArticleLike::where('article_id',$article_id)->count();
         return response()->json(['like_count'=>$like_count,'status'=>$status]);
+    }
+
+    public function createComment(Request $request)
+    {
+        $comment = $request->comment;
+        $article_id = $request->article_id;
+        $user_id = Auth::user()->id;
+        ArticleComment::create([
+            'article_id'=>$article_id,
+            'user_id'=>$user_id,
+            'comment'=>$comment
+        ]);
+        $comments = ArticleComment::where('article_id',$article_id)->with('user')->latest()->get();
+        $data = "";
+        foreach($comments as $cmt){
+            $asset = asset($cmt->user->image);
+            $data.="<div class='card-dark mt-1'>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-mt-1'>
+                        <img src='{$asset}'
+                            style='width:50px;border-radius:50%'>
+                    </div>
+                    <div class='col-mt-4 d-flex align-items-center'>
+                        {$cmt->user->name}
+                    </div>
+                </div>
+                <hr>
+                <p>{$cmt->comment}</p>
+            </div>
+        </div>";
+        }
+        return response()->json(['data'=>$data]);
+
     }
 
 }
